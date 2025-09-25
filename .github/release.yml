@@ -1,13 +1,13 @@
 changelog:
   categories:
     - title: "🚀 Features"
-      labels: 
+      labels:
         - "feature"
         - "feat"
         - "enhancement"
         - "type: feature"
     - title: "🔧 Minor"
-      labels: 
+      labels:
         - "minor"
         - "chore"
         - "refactor"
@@ -17,20 +17,20 @@ changelog:
         - "type: refactor"
         - "type: docs"
     - title: "⚡ Performance"
-      labels: 
+      labels:
         - "perf"
         - "performance"
         - "optimization"
         - "type: perf"
     - title: "🐛 Bug Fixes"
-      labels: 
+      labels:
         - "fix"
         - "bug"
         - "bugfix"
         - "hotfix"
         - "type: fix"
     - title: "🔌 Extensions and API"
-      labels: 
+      labels:
         - "api"
         - "extension"
         - "plugin"
@@ -70,7 +70,7 @@ changelog:
         - "readme"
         - "type: docs"
     - title: "🔄 Other"
-      labels: 
+      labels:
         - "*"
   exclude:
     labels:
