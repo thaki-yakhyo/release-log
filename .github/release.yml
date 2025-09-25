@@ -1,0 +1,82 @@
+changelog:
+  categories:
+    - title: "🚀 Features"
+      labels: 
+        - "feature"
+        - "feat"
+        - "enhancement"
+        - "type: feature"
+    - title: "🔧 Minor"
+      labels: 
+        - "minor"
+        - "chore"
+        - "refactor"
+        - "docs"
+        - "documentation"
+        - "type: chore"
+        - "type: refactor"
+        - "type: docs"
+    - title: "⚡ Performance"
+      labels: 
+        - "perf"
+        - "performance"
+        - "optimization"
+        - "type: perf"
+    - title: "🐛 Bug Fixes"
+      labels: 
+        - "fix"
+        - "bug"
+        - "bugfix"
+        - "hotfix"
+        - "type: fix"
+    - title: "🔌 Extensions and API"
+      labels: 
+        - "api"
+        - "extension"
+        - "plugin"
+        - "integration"
+        - "type: api"
+    - title: "🏗️ MLOps"
+      labels:
+        - "mlops"
+        - "kubeflow"
+        - "kserve"
+        - "mlflow"
+        - "deployment"
+        - "pipeline"
+        - "type: mlops"
+    - title: "📦 Dependencies"
+      labels:
+        - "dependencies"
+        - "deps"
+        - "requirements"
+        - "type: deps"
+    - title: "🔒 Security"
+      labels:
+        - "security"
+        - "vulnerability"
+        - "cve"
+        - "type: security"
+    - title: "🧪 Testing"
+      labels:
+        - "test"
+        - "testing"
+        - "ci"
+        - "type: test"
+    - title: "📚 Documentation"
+      labels:
+        - "docs"
+        - "documentation"
+        - "readme"
+        - "type: docs"
+    - title: "🔄 Other"
+      labels: 
+        - "*"
+  exclude:
+    labels:
+      - "skip-changelog"
+      - "no-changelog"
+      - "ignore"
+      - "duplicate"
+      - "invalid"
+      - "wontfix"

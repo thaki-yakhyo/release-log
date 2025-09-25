@@ -1,0 +1,5 @@
+[project]
+name = "release-log"
+version = "0.1.0"
+description = "Simple release automation test"
+
