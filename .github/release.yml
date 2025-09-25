@@ -1,50 +1,49 @@
 changelog:
   categories:
     - title: "🚀 Features"
-      labels:
+      labels: 
         - "feature"
         - "feat"
         - "enhancement"
         - "type: feature"
-    - title: "🔧 Minor"
-      labels:
-        - "minor"
-        - "chore"
-        - "refactor"
-        - "docs"
-        - "documentation"
-        - "type: chore"
-        - "type: refactor"
-        - "type: docs"
-    - title: "⚡ Performance"
-      labels:
-        - "perf"
-        - "performance"
-        - "optimization"
-        - "type: perf"
     - title: "🐛 Bug Fixes"
-      labels:
+      labels: 
         - "fix"
         - "bug"
         - "bugfix"
         - "hotfix"
         - "type: fix"
-    - title: "🔌 Extensions and API"
+    - title: "📚 Documentation"
       labels:
-        - "api"
-        - "extension"
-        - "plugin"
-        - "integration"
-        - "type: api"
-    - title: "🏗️ MLOps"
+        - "docs"
+        - "documentation"
+        - "readme"
+        - "type: docs"
+    - title: "⚡ Performance"
+      labels: 
+        - "perf"
+        - "performance"
+        - "optimization"
+        - "type: perf"
+    - title: "🏗️ Build"
       labels:
-        - "mlops"
-        - "kubeflow"
-        - "kserve"
-        - "mlflow"
+        - "build"
+        - "ci"
         - "deployment"
-        - "pipeline"
-        - "type: mlops"
+        - "type: build"
+    - title: "🎨 Style"
+      labels:
+        - "style"
+        - "formatting"
+        - "lint"
+        - "type: style"
+    - title: "🔧 Chores"
+      labels: 
+        - "chore"
+        - "maintenance"
+        - "refactor"
+        - "type: chore"
+        - "type: refactor"
     - title: "📦 Dependencies"
       labels:
         - "dependencies"
@@ -61,16 +60,9 @@ changelog:
       labels:
         - "test"
         - "testing"
-        - "ci"
         - "type: test"
-    - title: "📚 Documentation"
-      labels:
-        - "docs"
-        - "documentation"
-        - "readme"
-        - "type: docs"
     - title: "🔄 Other"
-      labels:
+      labels: 
         - "*"
   exclude:
     labels:
