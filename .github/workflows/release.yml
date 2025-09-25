@@ -47,18 +47,11 @@ jobs:
             NEXT_VERSION="v${MAJOR}.${MINOR}.0"
           fi
 
-          # Update version in files
-          sed -i "s/__version__ = \".*\"/__version__ = \"${NEXT_VERSION#v}\"/" core.py
-          sed -i "s/version = \".*\"/version = \"${NEXT_VERSION#v}\"/" pyproject.toml
-
-          # Commit and push version bump
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add core.py pyproject.toml
-          git commit -m "chore: bump version to $NEXT_VERSION"
-          git push
+          echo "Creating release: $NEXT_VERSION"
 
           # Create and push tag
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git tag -a "$NEXT_VERSION" -m "Release $NEXT_VERSION"
           git push origin "$NEXT_VERSION"
 
@@ -66,7 +59,7 @@ jobs:
           if [ -z "$LATEST_TAG" ]; then
             CHANGELOG=$(git log --pretty=format:"- %s" --reverse)
           else
-            CHANGELOG=$(git log --pretty=format:"- %s" --reverse ${LATEST_TAG}..HEAD~1)
+            CHANGELOG=$(git log --pretty=format:"- %s" --reverse ${LATEST_TAG}..HEAD)
           fi
 
           # Create GitHub Release
