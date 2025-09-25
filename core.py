@@ -15,3 +15,5 @@ def show_info():
 def get_version():
     """Get current version."""
     return __version__
+def new_feature():
+    return 'awesome feature'
