@@ -19,3 +19,4 @@
 # Style improvements
 # Final commit for release
 # Bug fix applied
+# Trigger v0.3.0 release
