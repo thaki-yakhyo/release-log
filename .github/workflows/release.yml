@@ -55,11 +55,56 @@ jobs:
           git tag -a "$NEXT_VERSION" -m "Release $NEXT_VERSION"
           git push origin "$NEXT_VERSION"
 
-          # Generate changelog
+          # Generate grouped changelog
           if [ -z "$LATEST_TAG" ]; then
-            CHANGELOG=$(git log --pretty=format:"- %s (by %an)" --reverse)
+            COMMIT_RANGE="HEAD"
           else
-            CHANGELOG=$(git log --pretty=format:"- %s (by %an)" --reverse ${LATEST_TAG}..HEAD)
+            COMMIT_RANGE="${LATEST_TAG}..HEAD"
+          fi
+          
+          # Get commits by type
+          FEATURES=$(git log --pretty=format:"- %s (by %an)" --reverse $COMMIT_RANGE | grep "^- feat:" || echo "")
+          FIXES=$(git log --pretty=format:"- %s (by %an)" --reverse $COMMIT_RANGE | grep "^- fix:" || echo "")
+          DOCS=$(git log --pretty=format:"- %s (by %an)" --reverse $COMMIT_RANGE | grep "^- docs:" || echo "")
+          CHORES=$(git log --pretty=format:"- %s (by %an)" --reverse $COMMIT_RANGE | grep "^- chore:" || echo "")
+          OTHER=$(git log --pretty=format:"- %s (by %an)" --reverse $COMMIT_RANGE | grep -v "^- \(feat\|fix\|docs\|chore\):" || echo "")
+          
+          # Build changelog with sections
+          CHANGELOG=""
+          
+          if [ -n "$FEATURES" ]; then
+            CHANGELOG="$CHANGELOG### 🚀 Features
+          $FEATURES
+
+          "
+          fi
+          
+          if [ -n "$FIXES" ]; then
+            CHANGELOG="$CHANGELOG### 🐛 Bug Fixes
+          $FIXES
+
+          "
+          fi
+          
+          if [ -n "$DOCS" ]; then
+            CHANGELOG="$CHANGELOG### 📚 Documentation
+          $DOCS
+
+          "
+          fi
+          
+          if [ -n "$CHORES" ]; then
+            CHANGELOG="$CHANGELOG### 🔧 Chores
+          $CHORES
+
+          "
+          fi
+          
+          if [ -n "$OTHER" ]; then
+            CHANGELOG="$CHANGELOG### 🔄 Other Changes
+          $OTHER
+
+          "
           fi
 
           # Create GitHub Release
