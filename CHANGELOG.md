@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/thaki-yakhyo/release-log/compare/v2.4.0...v2.5.0) (2025-09-26)
+
+
+### Features
+
+* standardize version tracking with version.txt file ([b272d44](https://github.com/thaki-yakhyo/release-log/commit/b272d4462868775d344a20db0c760d5bff213612))
+
 ## [2.4.0](https://github.com/thaki-yakhyo/release-log/compare/v2.3.1...v2.4.0) (2025-09-26)
 
 
