@@ -1,13 +1,13 @@
 changelog:
   categories:
     - title: "🚀 Features"
-      labels: 
+      labels:
         - "feature"
         - "feat"
         - "enhancement"
         - "type: feature"
     - title: "🐛 Bug Fixes"
-      labels: 
+      labels:
         - "fix"
         - "bug"
         - "bugfix"
@@ -20,7 +20,7 @@ changelog:
         - "readme"
         - "type: docs"
     - title: "⚡ Performance"
-      labels: 
+      labels:
         - "perf"
         - "performance"
         - "optimization"
@@ -38,7 +38,7 @@ changelog:
         - "lint"
         - "type: style"
     - title: "🔧 Chores"
-      labels: 
+      labels:
         - "chore"
         - "maintenance"
         - "refactor"
@@ -62,7 +62,7 @@ changelog:
         - "testing"
         - "type: test"
     - title: "🔄 Other"
-      labels: 
+      labels:
         - "*"
   exclude:
     labels:

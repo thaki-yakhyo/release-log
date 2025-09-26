@@ -1,14 +1,16 @@
-name: Release Every 10 Commits
+name: Release on Tag
 
 on:
   push:
-    branches: [main]
+    tags:
+      - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  auto-release:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -16,130 +18,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Count commits since last release
-        id: commits
+      - name: Create release from tag
         run: |
-          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-
-          if [ -z "$LATEST_TAG" ]; then
-            COMMIT_COUNT=$(git rev-list --count HEAD)
+          TAG="${{ github.ref_name }}"
+          echo "Tag detected: $TAG"
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "Release $TAG already exists. Skipping."
           else
-            COMMIT_COUNT=$(git rev-list --count ${LATEST_TAG}..HEAD)
+            gh release create "$TAG" \
+              --title "Release $TAG" \
+              --generate-notes
           fi
-
-          echo "commit_count=$COMMIT_COUNT" >> $GITHUB_OUTPUT
-          echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
-
-          echo "Commits since last release: $COMMIT_COUNT"
-
-      - name: Create release if 10+ commits
-        if: steps.commits.outputs.commit_count >= 10
-        run: |
-          LATEST_TAG="${{ steps.commits.outputs.latest_tag }}"
-
-          # Determine next version
-          if [ -z "$LATEST_TAG" ]; then
-            NEXT_VERSION="v0.1.0"
-          else
-            VERSION_WITHOUT_V=${LATEST_TAG#v}
-            IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION_WITHOUT_V"
-            MINOR=$((MINOR + 1))
-            NEXT_VERSION="v${MAJOR}.${MINOR}.0"
-          fi
-
-          echo "Creating release: $NEXT_VERSION"
-
-          # Create and push tag
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git tag -a "$NEXT_VERSION" -m "Release $NEXT_VERSION"
-          git push origin "$NEXT_VERSION"
-
-          # Generate grouped changelog
-          if [ -z "$LATEST_TAG" ]; then
-            COMMIT_RANGE="HEAD"
-          else
-            COMMIT_RANGE="${LATEST_TAG}..HEAD"
-          fi
-
-          # Get commits by type with GitHub usernames and PR numbers
-          # Use author name directly since it matches GitHub username
-          FEATURES=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | sed 's/Merge pull request #\([0-9]*\).*(\([a-f0-9]*\))/PR #\1 (\2)/' | grep "^- feat:" || echo "")
-          FIXES=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | sed 's/Merge pull request #\([0-9]*\).*(\([a-f0-9]*\))/PR #\1 (\2)/' | grep "^- fix:" || echo "")
-          DOCS=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | sed 's/Merge pull request #\([0-9]*\).*(\([a-f0-9]*\))/PR #\1 (\2)/' | grep "^- docs:" || echo "")
-          CHORES=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | sed 's/Merge pull request #\([0-9]*\).*(\([a-f0-9]*\))/PR #\1 (\2)/' | grep "^- chore:" || echo "")
-          PERF=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | sed 's/Merge pull request #\([0-9]*\).*(\([a-f0-9]*\))/PR #\1 (\2)/' | grep "^- perf:" || echo "")
-          BUILD=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | sed 's/Merge pull request #\([0-9]*\).*(\([a-f0-9]*\))/PR #\1 (\2)/' | grep "^- build:" || echo "")
-          STYLE=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | sed 's/Merge pull request #\([0-9]*\).*(\([a-f0-9]*\))/PR #\1 (\2)/' | grep "^- style:" || echo "")
-          OTHER=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | sed 's/Merge pull request #\([0-9]*\).*(\([a-f0-9]*\))/PR #\1 (\2)/' | grep -v "^- \(feat\|fix\|docs\|chore\|perf\|build\|style\):" || echo "")
-
-          # Build changelog with sections
-          CHANGELOG=""
-
-          if [ -n "$FEATURES" ]; then
-            CHANGELOG="$CHANGELOG### 🚀 Features
-          $FEATURES
-
-          "
-          fi
-
-          if [ -n "$FIXES" ]; then
-            CHANGELOG="$CHANGELOG### 🐛 Bug Fixes
-          $FIXES
-
-          "
-          fi
-
-          if [ -n "$DOCS" ]; then
-            CHANGELOG="$CHANGELOG### 📚 Documentation
-          $DOCS
-
-          "
-          fi
-
-          if [ -n "$CHORES" ]; then
-            CHANGELOG="$CHANGELOG### 🔧 Chores
-          $CHORES
-
-          "
-          fi
-          
-          if [ -n "$PERF" ]; then
-            CHANGELOG="$CHANGELOG### ⚡ Performance
-          $PERF
-
-          "
-          fi
-          
-          if [ -n "$BUILD" ]; then
-            CHANGELOG="$CHANGELOG### 🏗️ Build
-          $BUILD
-
-          "
-          fi
-          
-          if [ -n "$STYLE" ]; then
-            CHANGELOG="$CHANGELOG### 🎨 Style
-          $STYLE
-
-          "
-          fi
-          
-          if [ -n "$OTHER" ]; then
-            CHANGELOG="$CHANGELOG### 🔄 Other Changes
-          $OTHER
-
-          "
-          fi
-
-          # Create GitHub Release
-          gh release create "$NEXT_VERSION" \
-            --title "Release $NEXT_VERSION" \
-            --notes "## Changes
-
-          $CHANGELOG
-
-          ---
-          *Auto-generated after ${{ steps.commits.outputs.commit_count }} commits*"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
