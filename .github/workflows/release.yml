@@ -22,7 +22,7 @@ jobs:
         run: |
           echo "🔍 Verifying tag was created from main branch..."
           git fetch origin main
-          
+
           # Check if the current commit (tag) is an ancestor of or in main branch
           if git merge-base --is-ancestor ${{ github.sha }} origin/main; then
             echo "✅ SUCCESS: Tag '${{ github.ref_name }}' was created from main branch"
@@ -37,30 +37,30 @@ jobs:
         run: |
           TAG="${{ github.ref_name }}"
           echo "🔍 Validating SemVer format for tag: $TAG"
-          
+
           # SemVer regex pattern: v{Major}.{Minor}.{Patch}[-{PreRelease}][+{BuildMetadata}]
           # Examples: v1.2.3, v1.0.0-alpha.1, v2.1.0-rc.1, v1.2.3-beta.2+build.123
           SEMVER_PATTERN="^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$"
-          
+
           if echo "$TAG" | grep -qE "$SEMVER_PATTERN"; then
             echo "✅ SUCCESS: Tag '$TAG' follows SemVer format"
-            
+
             # Extract version components for validation
             VERSION=${TAG#v}  # Remove 'v' prefix
             MAJOR=$(echo "$VERSION" | cut -d'.' -f1)
             MINOR=$(echo "$VERSION" | cut -d'.' -f2)
             PATCH=$(echo "$VERSION" | cut -d'.' -f3 | cut -d'-' -f1)
-            
+
             echo "📊 Version components:"
             echo "   Major: $MAJOR (Breaking changes)"
             echo "   Minor: $MINOR (New features, backward compatible)"
             echo "   Patch: $PATCH (Bug fixes, backward compatible)"
-            
+
             if echo "$VERSION" | grep -q "-"; then
               PRERELEASE=$(echo "$VERSION" | cut -d'-' -f2 | cut -d'+' -f1)
               echo "   Pre-release: $PRERELEASE (alpha, beta, rc, etc.)"
             fi
-            
+
             if echo "$VERSION" | grep -q "+"; then
               BUILD=$(echo "$VERSION" | cut -d'+' -f2)
               echo "   Build metadata: $BUILD"

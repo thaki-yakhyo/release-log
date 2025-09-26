@@ -28,7 +28,7 @@ jobs:
         run: |
           echo "🔍 Verifying tag was created from main branch..."
           git fetch origin main
-          
+
           # Check if the current commit (tag) is an ancestor of or in main branch
           if git merge-base --is-ancestor ${{ github.sha }} origin/main; then
             echo "✅ SUCCESS: Tag '${{ github.ref_name }}' was created from main branch"
@@ -43,25 +43,25 @@ jobs:
         run: |
           TAG="${{ github.ref_name }}"
           echo "🔍 Validating SemVer format for tag: $TAG"
-          
+
           # SemVer regex pattern: v{Major}.{Minor}.{Patch}[-{PreRelease}][+{BuildMetadata}]
           SEMVER_PATTERN="^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$"
-          
+
           if echo "$TAG" | grep -qE "$SEMVER_PATTERN"; then
             echo "✅ SUCCESS: Tag '$TAG' follows SemVer format"
-            
+
             # Extract version components
             VERSION=${TAG#v}
             MAJOR=$(echo "$VERSION" | cut -d'.' -f1)
             MINOR=$(echo "$VERSION" | cut -d'.' -f2)
             PATCH=$(echo "$VERSION" | cut -d'.' -f3 | cut -d'-' -f1)
-            
+
             echo "📊 Docker image will be tagged with:"
             echo "   $TAG (exact version)"
             echo "   $MAJOR.$MINOR.$PATCH (semver)"
             echo "   $MAJOR.$MINOR (minor version)"
             echo "   $MAJOR (major version)"
-            
+
             if echo "$VERSION" | grep -q "-"; then
               PRERELEASE=$(echo "$VERSION" | cut -d'-' -f2 | cut -d'+' -f1)
               echo "   Pre-release: $PRERELEASE"

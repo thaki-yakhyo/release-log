@@ -11,13 +11,13 @@
           "hidden": false
         },
         {
-          "type": "fix", 
+          "type": "fix",
           "section": "🐛 Bug Fixes",
           "hidden": false
         },
         {
           "type": "docs",
-          "section": "📚 Documentation", 
+          "section": "📚 Documentation",
           "hidden": false
         },
         {
