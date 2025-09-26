@@ -47,16 +47,16 @@ jobs:
           echo "Tag name: ${{ steps.release.outputs.tag_name || 'none' }}"
           echo "Version: ${{ steps.release.outputs.version || 'none' }}"
           echo "PR number: ${{ steps.release.outputs.pr || 'none' }}"
-          
+
           PR_NUM="${{ steps.release.outputs.pr }}"
           RELEASE_CREATED="${{ steps.release.outputs.release_created }}"
           TAG_NAME="${{ steps.release.outputs.tag_name }}"
-          
+
           if [ -n "$PR_NUM" ]; then
             echo "📋 Release PR created: #$PR_NUM"
             echo "🔗 Review at: https://github.com/${{ github.repository }}/pull/$PR_NUM"
           fi
-          
+
           if [ "$RELEASE_CREATED" = "true" ]; then
             echo "🎉 Release $TAG_NAME was created!"
             echo "🔗 View at: https://github.com/${{ github.repository }}/releases/tag/$TAG_NAME"
