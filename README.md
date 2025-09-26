@@ -159,7 +159,9 @@ ghcr.io/username/repo:latest    # Latest release
 11. Merge Release PR
 
 12. Automatic results:
-    - GitHub Release v2.2.0 created
+    - GitHub Release v2.2.0 created with enhanced changelog
+    - Release notes include author attribution (by @username)
+    - Categorized changes with emojis (🚀 Features, 🐛 Bug Fixes, etc.)
     - Docker images built and published
     - Security scanning completed
     - Artifacts available for download
@@ -173,15 +175,17 @@ ghcr.io/username/repo:latest    # Latest release
 3. Check "Allow GitHub Actions to create and approve pull requests"
 
 ### Required Files:
-- `.github/workflows/release-please.yml` - Main automation
-- `.release-please-config.json` - Configuration
+- `.github/workflows/release-please.yml` - Main automation with author enhancement
 - `VERSION` - Version tracking
 - `pyproject.toml` - Package metadata
+
+### Optional Files:
+- `.release-please-config.json` - Custom configuration (not required, uses defaults)
 
 ## 📊 Benefits
 
 - ✅ **Automated version management** based on conventional commits
-- ✅ **Professional changelogs** with categorized changes
+- ✅ **Professional changelogs** with categorized changes and author attribution
 - ✅ **Security scanning** and compliance reporting
 - ✅ **Multi-platform Docker images** for broad compatibility
 - ✅ **Review process** for all releases through PRs

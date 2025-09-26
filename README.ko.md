@@ -159,7 +159,9 @@ ghcr.io/username/repo:latest    # 최신 릴리스
 11. Release PR 병합
 
 12. 자동 결과:
-    - GitHub Release v2.2.0 생성
+    - 향상된 체인지로그와 함께 GitHub Release v2.2.0 생성
+    - 작성자 정보가 포함된 릴리스 노트 (by @username)
+    - 이모지로 분류된 변경사항 (🚀 Features, 🐛 Bug Fixes, 등)
     - Docker 이미지 빌드 및 게시
     - 보안 스캔 완료
     - 다운로드 가능한 아티팩트
@@ -173,15 +175,17 @@ ghcr.io/username/repo:latest    # 최신 릴리스
 3. "Allow GitHub Actions to create and approve pull requests" 체크
 
 ### 필수 파일:
-- `.github/workflows/release-please.yml` - 메인 자동화
-- `.release-please-config.json` - 설정
+- `.github/workflows/release-please.yml` - 작성자 향상 기능이 포함된 메인 자동화
 - `VERSION` - 버전 추적
 - `pyproject.toml` - 패키지 메타데이터
+
+### 선택적 파일:
+- `.release-please-config.json` - 사용자 정의 설정 (필수 아님, 기본값 사용)
 
 ## 📊 장점
 
 - ✅ **자동화된 버전 관리** conventional commits 기반
-- ✅ **전문적인 체인지로그** 분류된 변경사항 포함
+- ✅ **전문적인 체인지로그** 분류된 변경사항 및 작성자 정보 포함
 - ✅ **보안 스캔** 및 컴플라이언스 리포팅
 - ✅ **멀티플랫폼 Docker 이미지** 광범위한 호환성
 - ✅ **PR을 통한 리뷰 프로세스** 모든 릴리스에 대해
