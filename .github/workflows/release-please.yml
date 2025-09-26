@@ -31,20 +31,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Show release-please outputs
-        if: steps.release.outputs.pr != '' || steps.release.outputs.release_created == 'true'
         run: |
-          echo "🔍 release-please Results:"
-          echo "Release created: ${{ steps.release.outputs.release_created }}"
-          
-          if [ "${{ steps.release.outputs.pr }}" != "" ]; then
-            echo "📋 Release PR created: #${{ steps.release.outputs.pr }}"
-            echo "🔗 Review at: https://github.com/${{ github.repository }}/pull/${{ steps.release.outputs.pr }}"
-          fi
-          
-          if [ "${{ steps.release.outputs.release_created }}" = "true" ]; then
-            echo "🎉 Release ${{ steps.release.outputs.tag_name }} was created!"
-            echo "🔗 View at: https://github.com/${{ github.repository }}/releases/tag/${{ steps.release.outputs.tag_name }}"
-          fi
+          echo "🔍 release-please completed successfully"
+          echo "Check the workflow outputs and subsequent jobs for results"
 
   # Enhance release with author information
   enhance-release:
