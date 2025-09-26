@@ -11,47 +11,8 @@ permissions:
 jobs:
   release-please:
     runs-on: ubuntu-latest
-    outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
-      version: ${{ steps.release.outputs.version }}
-      pr: ${{ steps.release.outputs.pr }}
     steps:
-      - name: Run release-please
-        id: release
-        uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         with:
-          # Release type for simple projects
           release-type: simple
-
-          # Package name (used in release titles)
           package-name: release-log
-
-          # Token for creating PRs and releases
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-          # Include component in tag names (optional)
-          include-component-in-tag: false
-
-          # Use default configuration (no custom config file)
-
-      - name: Show release-please outputs
-        if: steps.release.outputs.pr != '' || steps.release.outputs.release_created == 'true'
-        run: |
-          echo "release-please Results:"
-          echo "Release created: ${{ steps.release.outputs.release_created }}"
-          echo "Tag name: ${{ steps.release.outputs.tag_name }}"
-          echo "Version: ${{ steps.release.outputs.version }}"
-          echo "PR number: ${{ steps.release.outputs.pr }}"
-
-  # Optional: Trigger additional workflows when release is created
-  post-release:
-    needs: release-please
-    runs-on: ubuntu-latest
-    if: needs.release-please.outputs.release_created == 'true'
-    steps:
-      - name: Notify about new release
-        run: |
-          echo "🚀 New release created: ${{ needs.release-please.outputs.tag_name }}"
-          echo "📦 Docker images and artifacts will be built by tag-triggered workflows"
-          echo "🔗 Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ needs.release-please.outputs.tag_name }}"
