@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.4.0](https://github.com/thaki-yakhyo/release-log/compare/v2.3.1...v2.4.0) (2025-09-26)
+
+
+### Features
+
+* enhance release-please with author attribution ([89e409f](https://github.com/thaki-yakhyo/release-log/commit/89e409face00877b7e83b8f963e6bbe0c8849080))
+
+
+### Bug Fixes
+
+* remove problematic output display step causing shell syntax errors ([7a0c14d](https://github.com/thaki-yakhyo/release-log/commit/7a0c14de904e39ac67dcdfe6bc89d313357326d6))
+* simplify release-please output handling to prevent shell errors ([a5092a1](https://github.com/thaki-yakhyo/release-log/commit/a5092a1cc89ac6d8634d593c72264bd74cb65c36))
+
 ## [2.3.1](https://github.com/thaki-yakhyo/release-log/compare/v2.3.0...v2.3.1) (2025-09-26)
 
 
