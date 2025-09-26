@@ -43,19 +43,23 @@ jobs:
         if: steps.release.outputs.pr || steps.release.outputs.release_created
         run: |
           echo "🔍 release-please Results:"
-          echo "Release created: ${{ steps.release.outputs.release_created }}"
-          echo "Tag name: ${{ steps.release.outputs.tag_name }}"
-          echo "Version: ${{ steps.release.outputs.version }}"
-          echo "PR number: ${{ steps.release.outputs.pr }}"
-
-          if [ "${{ steps.release.outputs.pr }}" != "" ]; then
-            echo "📋 Release PR created: #${{ steps.release.outputs.pr }}"
-            echo "🔗 Review at: https://github.com/${{ github.repository }}/pull/${{ steps.release.outputs.pr }}"
+          echo "Release created: ${{ steps.release.outputs.release_created || 'false' }}"
+          echo "Tag name: ${{ steps.release.outputs.tag_name || 'none' }}"
+          echo "Version: ${{ steps.release.outputs.version || 'none' }}"
+          echo "PR number: ${{ steps.release.outputs.pr || 'none' }}"
+          
+          PR_NUM="${{ steps.release.outputs.pr }}"
+          RELEASE_CREATED="${{ steps.release.outputs.release_created }}"
+          TAG_NAME="${{ steps.release.outputs.tag_name }}"
+          
+          if [ -n "$PR_NUM" ]; then
+            echo "📋 Release PR created: #$PR_NUM"
+            echo "🔗 Review at: https://github.com/${{ github.repository }}/pull/$PR_NUM"
           fi
-
-          if [ "${{ steps.release.outputs.release_created }}" == "true" ]; then
-            echo "🎉 Release ${{ steps.release.outputs.tag_name }} was created!"
-            echo "🔗 View at: https://github.com/${{ github.repository }}/releases/tag/${{ steps.release.outputs.tag_name }}"
+          
+          if [ "$RELEASE_CREATED" = "true" ]; then
+            echo "🎉 Release $TAG_NAME was created!"
+            echo "🔗 View at: https://github.com/${{ github.repository }}/releases/tag/$TAG_NAME"
           fi
 
   # Optional: Trigger additional workflows when release is created
