@@ -176,7 +176,7 @@ ghcr.io/username/repo:latest    # Latest release
 
 ### Required Files:
 - `.github/workflows/release-please.yml` - Main automation with author enhancement
-- `VERSION` - Version tracking
+- `version.txt` - Version tracking
 - `pyproject.toml` - Package metadata
 
 ### Optional Files:

@@ -176,7 +176,7 @@ ghcr.io/username/repo:latest    # 최신 릴리스
 
 ### 필수 파일:
 - `.github/workflows/release-please.yml` - 작성자 향상 기능이 포함된 메인 자동화
-- `VERSION` - 버전 추적
+- `version.txt` - 버전 추적
 - `pyproject.toml` - 패키지 메타데이터
 
 ### 선택적 파일:
