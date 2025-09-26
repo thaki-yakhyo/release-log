@@ -39,6 +39,40 @@ jobs:
             exit 1
           fi
 
+      - name: Validate SemVer format
+        run: |
+          TAG="${{ github.ref_name }}"
+          echo "🔍 Validating SemVer format for tag: $TAG"
+          
+          # SemVer regex pattern: v{Major}.{Minor}.{Patch}[-{PreRelease}][+{BuildMetadata}]
+          SEMVER_PATTERN="^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$"
+          
+          if echo "$TAG" | grep -qE "$SEMVER_PATTERN"; then
+            echo "✅ SUCCESS: Tag '$TAG' follows SemVer format"
+            
+            # Extract version components
+            VERSION=${TAG#v}
+            MAJOR=$(echo "$VERSION" | cut -d'.' -f1)
+            MINOR=$(echo "$VERSION" | cut -d'.' -f2)
+            PATCH=$(echo "$VERSION" | cut -d'.' -f3 | cut -d'-' -f1)
+            
+            echo "📊 Docker image will be tagged with:"
+            echo "   $TAG (exact version)"
+            echo "   $MAJOR.$MINOR.$PATCH (semver)"
+            echo "   $MAJOR.$MINOR (minor version)"
+            echo "   $MAJOR (major version)"
+            
+            if echo "$VERSION" | grep -q "-"; then
+              PRERELEASE=$(echo "$VERSION" | cut -d'-' -f2 | cut -d'+' -f1)
+              echo "   Pre-release: $PRERELEASE"
+            fi
+          else
+            echo "❌ ERROR: Tag '$TAG' does not follow SemVer format"
+            echo "🐳 Docker images require valid SemVer tags for proper versioning"
+            echo "💡 Please use format: v{Major}.{Minor}.{Patch}[-{PreRelease}]"
+            exit 1
+          fi
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
