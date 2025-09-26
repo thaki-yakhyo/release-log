@@ -40,14 +40,14 @@ jobs:
           echo "Generating changelog for range: $COMMIT_RANGE"
 
           # Get commits by type with GitHub usernames and commit hashes
-          FEATURES=$(git log --pretty=format:"- %s (%h)" --reverse $COMMIT_RANGE | grep "^- feat:" || echo "")
-          FIXES=$(git log --pretty=format:"- %s (%h)" --reverse $COMMIT_RANGE | grep "^- fix:" || echo "")
-          DOCS=$(git log --pretty=format:"- %s (%h)" --reverse $COMMIT_RANGE | grep "^- docs:" || echo "")
-          CHORES=$(git log --pretty=format:"- %s (%h)" --reverse $COMMIT_RANGE | grep "^- chore:" || echo "")
-          PERF=$(git log --pretty=format:"- %s (%h)" --reverse $COMMIT_RANGE | grep "^- perf:" || echo "")
-          BUILD=$(git log --pretty=format:"- %s (%h)" --reverse $COMMIT_RANGE | grep "^- build:" || echo "")
-          STYLE=$(git log --pretty=format:"- %s (%h)" --reverse $COMMIT_RANGE | grep "^- style:" || echo "")
-          OTHER=$(git log --pretty=format:"- %s (%h)" --reverse $COMMIT_RANGE | grep -v "^- \(feat\|fix\|docs\|chore\|perf\|build\|style\):" || echo "")
+          FEATURES=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep "^- feat:" || echo "")
+          FIXES=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep "^- fix:" || echo "")
+          DOCS=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep "^- docs:" || echo "")
+          CHORES=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep "^- chore:" || echo "")
+          PERF=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep "^- perf:" || echo "")
+          BUILD=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep "^- build:" || echo "")
+          STYLE=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep "^- style:" || echo "")
+          OTHER=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep -v "^- \(feat\|fix\|docs\|chore\|perf\|build\|style\):" || echo "")
 
           # Build changelog with sections
           CHANGELOG=""
