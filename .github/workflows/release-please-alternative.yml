@@ -1,0 +1,180 @@
+name: Release Please (Alternative)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: 'Create release directly (skip PR)'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  check-for-release:
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+      next_version: ${{ steps.check.outputs.next_version }}
+      changelog: ${{ steps.check.outputs.changelog }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if release is needed
+        id: check
+        run: |
+          # Get current version
+          CURRENT_VERSION=$(cat VERSION)
+          echo "Current version: $CURRENT_VERSION"
+
+          # Get latest tag
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "Latest tag: $LATEST_TAG"
+
+          # Get commits since last tag
+          if [ "$LATEST_TAG" = "v0.0.0" ]; then
+            COMMITS=$(git log --oneline --pretty=format:"%s")
+          else
+            COMMITS=$(git log ${LATEST_TAG}..HEAD --oneline --pretty=format:"%s")
+          fi
+
+          echo "Commits since last release:"
+          echo "$COMMITS"
+
+          # Check for conventional commits
+          FEAT_COUNT=$(echo "$COMMITS" | grep -c "^feat:" || echo "0")
+          FIX_COUNT=$(echo "$COMMITS" | grep -c "^fix:" || echo "0")
+          BREAKING_COUNT=$(echo "$COMMITS" | grep -c "^feat!:\|^fix!:\|BREAKING CHANGE" || echo "0")
+
+          echo "Feature commits: $FEAT_COUNT"
+          echo "Fix commits: $FIX_COUNT"
+          echo "Breaking commits: $BREAKING_COUNT"
+
+          # Determine version bump
+          if [ "$BREAKING_COUNT" -gt 0 ]; then
+            # Major version bump
+            MAJOR=$(echo $CURRENT_VERSION | cut -d. -f1)
+            NEXT_VERSION="$((MAJOR + 1)).0.0"
+          elif [ "$FEAT_COUNT" -gt 0 ]; then
+            # Minor version bump
+            MAJOR=$(echo $CURRENT_VERSION | cut -d. -f1)
+            MINOR=$(echo $CURRENT_VERSION | cut -d. -f2)
+            PATCH=$(echo $CURRENT_VERSION | cut -d. -f3)
+            NEXT_VERSION="$MAJOR.$((MINOR + 1)).0"
+          elif [ "$FIX_COUNT" -gt 0 ]; then
+            # Patch version bump
+            MAJOR=$(echo $CURRENT_VERSION | cut -d. -f1)
+            MINOR=$(echo $CURRENT_VERSION | cut -d. -f2)
+            PATCH=$(echo $CURRENT_VERSION | cut -d. -f3)
+            NEXT_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+          else
+            echo "No release needed - no conventional commits found"
+            echo "should_release=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "Next version would be: $NEXT_VERSION"
+          echo "should_release=true" >> $GITHUB_OUTPUT
+          echo "next_version=$NEXT_VERSION" >> $GITHUB_OUTPUT
+
+          # Generate changelog
+          FEATURES=$(echo "$COMMITS" | grep "^feat:" | sed 's/^/- /' || echo "")
+          FIXES=$(echo "$COMMITS" | grep "^fix:" | sed 's/^/- /' || echo "")
+          DOCS=$(echo "$COMMITS" | grep "^docs:" | sed 's/^/- /' || echo "")
+          BUILD=$(echo "$COMMITS" | grep "^build:" | sed 's/^/- /' || echo "")
+          PERF=$(echo "$COMMITS" | grep "^perf:" | sed 's/^/- /' || echo "")
+
+          CHANGELOG=""
+          if [ -n "$FEATURES" ]; then
+            CHANGELOG="$CHANGELOG### 🚀 Features\n$FEATURES\n\n"
+          fi
+          if [ -n "$FIXES" ]; then
+            CHANGELOG="$CHANGELOG### 🐛 Bug Fixes\n$FIXES\n\n"
+          fi
+          if [ -n "$DOCS" ]; then
+            CHANGELOG="$CHANGELOG### 📚 Documentation\n$DOCS\n\n"
+          fi
+          if [ -n "$BUILD" ]; then
+            CHANGELOG="$CHANGELOG### 🏗️ Build\n$BUILD\n\n"
+          fi
+          if [ -n "$PERF" ]; then
+            CHANGELOG="$CHANGELOG### ⚡ Performance\n$PERF\n\n"
+          fi
+
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Show release recommendation
+        if: steps.check.outputs.should_release == 'true'
+        run: |
+          echo "🎯 RELEASE RECOMMENDATION:"
+          echo "Current version: $(cat VERSION)"
+          echo "Suggested version: ${{ steps.check.outputs.next_version }}"
+          echo ""
+          echo "📋 Changelog preview:"
+          echo -e "${{ steps.check.outputs.changelog }}"
+          echo ""
+          echo "💡 To create this release:"
+          echo "1. Go to Actions tab"
+          echo "2. Run 'Release Please (Alternative)' workflow manually"
+          echo "3. Set 'create_release' to 'true'"
+
+  create-release:
+    needs: check-for-release
+    runs-on: ubuntu-latest
+    if: needs.check-for-release.outputs.should_release == 'true' && github.event.inputs.create_release == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Update version files
+        run: |
+          NEW_VERSION="${{ needs.check-for-release.outputs.next_version }}"
+          echo "Updating version to: $NEW_VERSION"
+
+          # Update VERSION file
+          echo "$NEW_VERSION" > VERSION
+
+          # Update pyproject.toml
+          sed -i "s/version = \".*\"/version = \"$NEW_VERSION\"/" pyproject.toml
+
+          # Update manifest
+          echo "{\".\": \"$NEW_VERSION\"}" > .release-please-manifest.json
+
+      - name: Create and push tag
+        run: |
+          NEW_VERSION="${{ needs.check-for-release.outputs.next_version }}"
+
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          git add VERSION pyproject.toml .release-please-manifest.json
+          git commit -m "chore: release $NEW_VERSION" || echo "No changes to commit"
+          git push origin main
+
+          git tag -a "v$NEW_VERSION" -m "Release v$NEW_VERSION"
+          git push origin "v$NEW_VERSION"
+
+      - name: Create GitHub Release
+        run: |
+          NEW_VERSION="${{ needs.check-for-release.outputs.next_version }}"
+
+          gh release create "v$NEW_VERSION" \
+            --title "Release v$NEW_VERSION" \
+            --notes "## Changes
+
+          ${{ needs.check-for-release.outputs.changelog }}
+          ---
+          *Created by release-please alternative workflow*"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
