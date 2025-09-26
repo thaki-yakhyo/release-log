@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.3.1](https://github.com/thaki-yakhyo/release-log/compare/v2.3.0...v2.3.1) (2025-09-26)
+
+
+### Bug Fixes
+
+* add missing release-please configuration files ([cba1e87](https://github.com/thaki-yakhyo/release-log/commit/cba1e871d70ed5b9037a0aaa52289a8df8891632))
+* resolve shell syntax error and remove deleted config file references ([14e4c6d](https://github.com/thaki-yakhyo/release-log/commit/14e4c6df19a5c9d03fa912d9cea980e56f4323a6))
+* resolve shell syntax error in release-please workflow ([04256e1](https://github.com/thaki-yakhyo/release-log/commit/04256e1881342def251a9d54ee49d8b8c1007ed8))
+
 ## [2.3.0](https://github.com/thaki-yakhyo/release-log/compare/v2.2.0...v2.3.0) (2025-09-26)
 
 
