@@ -22,23 +22,23 @@ jobs:
         run: |
           TAG="${{ github.ref_name }}"
           echo "Tag detected: $TAG"
-          
+
           if gh release view "$TAG" > /dev/null 2>&1; then
             echo "Release $TAG already exists. Skipping."
             exit 0
           fi
-          
+
           # Get previous tag for changelog range
           PREVIOUS_TAG=$(git describe --tags --abbrev=0 "$TAG^" 2>/dev/null || echo "")
-          
+
           if [ -z "$PREVIOUS_TAG" ]; then
             COMMIT_RANGE="HEAD"
           else
             COMMIT_RANGE="${PREVIOUS_TAG}..${TAG}"
           fi
-          
+
           echo "Generating changelog for range: $COMMIT_RANGE"
-          
+
           # Get commits by type with GitHub usernames and commit hashes
           FEATURES=$(git log --pretty=format:"- %s (%h)" --reverse $COMMIT_RANGE | grep "^- feat:" || echo "")
           FIXES=$(git log --pretty=format:"- %s (%h)" --reverse $COMMIT_RANGE | grep "^- fix:" || echo "")
@@ -48,71 +48,71 @@ jobs:
           BUILD=$(git log --pretty=format:"- %s (%h)" --reverse $COMMIT_RANGE | grep "^- build:" || echo "")
           STYLE=$(git log --pretty=format:"- %s (%h)" --reverse $COMMIT_RANGE | grep "^- style:" || echo "")
           OTHER=$(git log --pretty=format:"- %s (%h)" --reverse $COMMIT_RANGE | grep -v "^- \(feat\|fix\|docs\|chore\|perf\|build\|style\):" || echo "")
-          
+
           # Build changelog with sections
           CHANGELOG=""
-          
+
           if [ -n "$FEATURES" ]; then
             CHANGELOG="$CHANGELOG### 🚀 Features
           $FEATURES
-          
+
           "
           fi
-          
+
           if [ -n "$FIXES" ]; then
             CHANGELOG="$CHANGELOG### 🐛 Bug Fixes
           $FIXES
-          
+
           "
           fi
-          
+
           if [ -n "$DOCS" ]; then
             CHANGELOG="$CHANGELOG### 📚 Documentation
           $DOCS
-          
+
           "
           fi
-          
+
           if [ -n "$BUILD" ]; then
             CHANGELOG="$CHANGELOG### 🏗️ Build
           $BUILD
-          
+
           "
           fi
-          
+
           if [ -n "$PERF" ]; then
             CHANGELOG="$CHANGELOG### ⚡ Performance
           $PERF
-          
+
           "
           fi
-          
+
           if [ -n "$STYLE" ]; then
             CHANGELOG="$CHANGELOG### 🎨 Style
           $STYLE
-          
+
           "
           fi
-          
+
           if [ -n "$CHORES" ]; then
             CHANGELOG="$CHANGELOG### 🔧 Chores
           $CHORES
-          
+
           "
           fi
-          
+
           if [ -n "$OTHER" ]; then
             CHANGELOG="$CHANGELOG### 🔄 Other Changes
           $OTHER
-          
+
           "
           fi
-          
+
           # Create GitHub Release with custom changelog
           gh release create "$TAG" \
             --title "Release $TAG" \
             --notes "## Changes
-          
+
           $CHANGELOG
           ---
           *Tag-driven release*"
