@@ -24,6 +24,21 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Verify release from main branch
+        run: |
+          echo "🔍 Verifying tag was created from main branch..."
+          git fetch origin main
+          
+          # Check if the current commit (tag) is an ancestor of or in main branch
+          if git merge-base --is-ancestor ${{ github.sha }} origin/main; then
+            echo "✅ SUCCESS: Tag '${{ github.ref_name }}' was created from main branch"
+          else
+            echo "❌ ERROR: Tag '${{ github.ref_name }}' was NOT created from main branch"
+            echo "🚫 Docker releases are only allowed from main branch for security"
+            echo "💡 Please create the tag from main branch and try again"
+            exit 1
+          fi
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
