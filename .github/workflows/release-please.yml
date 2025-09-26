@@ -33,29 +33,25 @@ jobs:
           # Include component in tag names (optional)
           include-component-in-tag: false
 
-          # Custom configuration file
-          config-file: .release-please-config.json
-
-          # Custom manifest file
-          manifest-file: .release-please-manifest.json
+          # Use default configuration (no custom config file)
 
       - name: Show release-please outputs
         if: steps.release.outputs.pr || steps.release.outputs.release_created
         run: |
-          echo "🔍 release-please Results:"
+          echo "release-please Results:"
           echo "Release created: ${{ steps.release.outputs.release_created }}"
           echo "Tag name: ${{ steps.release.outputs.tag_name }}"
           echo "Version: ${{ steps.release.outputs.version }}"
           echo "PR number: ${{ steps.release.outputs.pr }}"
 
           if [ "${{ steps.release.outputs.pr }}" != "" ]; then
-            echo "📋 Release PR created: #${{ steps.release.outputs.pr }}"
-            echo "🔗 Review at: https://github.com/${{ github.repository }}/pull/${{ steps.release.outputs.pr }}"
+            echo "Release PR created: #${{ steps.release.outputs.pr }}"
+            echo "Review at: https://github.com/${{ github.repository }}/pull/${{ steps.release.outputs.pr }}"
           fi
 
           if [ "${{ steps.release.outputs.release_created }}" == "true" ]; then
-            echo "🎉 Release ${{ steps.release.outputs.tag_name }} was created!"
-            echo "🔗 View at: https://github.com/${{ github.repository }}/releases/tag/${{ steps.release.outputs.tag_name }}"
+            echo "Release ${{ steps.release.outputs.tag_name }} was created!"
+            echo "View at: https://github.com/${{ github.repository }}/releases/tag/${{ steps.release.outputs.tag_name }}"
           fi
 
   # Optional: Trigger additional workflows when release is created
