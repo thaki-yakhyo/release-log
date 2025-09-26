@@ -55,14 +55,104 @@ jobs:
             echo "🔗 View at: https://github.com/${{ github.repository }}/releases/tag/$TAG_NAME"
           fi
 
-  # Optional: Trigger additional workflows when release is created
-  post-release:
+  # Enhance release with author information
+  enhance-release:
     needs: release-please
     runs-on: ubuntu-latest
     if: needs.release-please.outputs.release_created == 'true'
     steps:
-      - name: Notify about new release
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Enhance release notes with author information
         run: |
-          echo "🚀 New release created: ${{ needs.release-please.outputs.tag_name }}"
-          echo "📦 Docker images and artifacts will be built by tag-triggered workflows"
-          echo "🔗 Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ needs.release-please.outputs.tag_name }}"
+          TAG="${{ needs.release-please.outputs.tag_name }}"
+          echo "🔍 Enhancing release $TAG with author information..."
+
+          # Get the previous tag for commit range
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 "$TAG^" 2>/dev/null || echo "")
+
+          if [ -z "$PREVIOUS_TAG" ]; then
+            COMMIT_RANGE="HEAD"
+          else
+            COMMIT_RANGE="${PREVIOUS_TAG}..${TAG}"
+          fi
+
+          echo "📊 Analyzing commits in range: $COMMIT_RANGE"
+
+          # Get existing release notes
+          EXISTING_NOTES=$(gh release view "$TAG" --json body --jq '.body')
+
+          # Generate enhanced changelog with authors
+          FEATURES=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep "^- feat:" || echo "")
+          FIXES=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep "^- fix:" || echo "")
+          DOCS=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep "^- docs:" || echo "")
+          BUILD=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep "^- build:" || echo "")
+          PERF=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep "^- perf:" || echo "")
+          CHORE=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep "^- chore:" || echo "")
+          OTHER=$(git log --pretty=format:"- %s (%h) (by @%an)" --reverse $COMMIT_RANGE | grep -v "^- \(feat\|fix\|docs\|build\|perf\|chore\):" || echo "")
+
+          # Build enhanced changelog
+          ENHANCED_CHANGELOG=""
+
+          if [ -n "$FEATURES" ]; then
+            ENHANCED_CHANGELOG="$ENHANCED_CHANGELOG### 🚀 Features
+          $FEATURES
+
+          "
+          fi
+
+          if [ -n "$FIXES" ]; then
+            ENHANCED_CHANGELOG="$ENHANCED_CHANGELOG### 🐛 Bug Fixes
+          $FIXES
+
+          "
+          fi
+
+          if [ -n "$DOCS" ]; then
+            ENHANCED_CHANGELOG="$ENHANCED_CHANGELOG### 📚 Documentation
+          $DOCS
+
+          "
+          fi
+
+          if [ -n "$BUILD" ]; then
+            ENHANCED_CHANGELOG="$ENHANCED_CHANGELOG### 🏗️ Build
+          $BUILD
+
+          "
+          fi
+
+          if [ -n "$PERF" ]; then
+            ENHANCED_CHANGELOG="$ENHANCED_CHANGELOG### ⚡ Performance
+          $PERF
+
+          "
+          fi
+
+          if [ -n "$CHORE" ]; then
+            ENHANCED_CHANGELOG="$ENHANCED_CHANGELOG### 🔧 Chores
+          $CHORE
+
+          "
+          fi
+
+          if [ -n "$OTHER" ]; then
+            ENHANCED_CHANGELOG="$ENHANCED_CHANGELOG### 🔄 Other Changes
+          $OTHER
+
+          "
+          fi
+
+          # Update release with enhanced notes
+          gh release edit "$TAG" --notes "## Changes
+
+          $ENHANCED_CHANGELOG
+          ---
+          *Enhanced release notes with author attribution*"
+
+          echo "✅ Release notes enhanced with author information"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
