@@ -30,33 +30,26 @@ jobs:
           # Token for creating PRs and releases
           token: ${{ secrets.GITHUB_TOKEN }}
 
-          # Include component in tag names (optional)
-          include-component-in-tag: false
-
-          # Custom configuration file
-          config-file: .release-please-config.json
-
-          # Custom manifest file
-          manifest-file: .release-please-manifest.json
-
       - name: Show release-please outputs
         if: steps.release.outputs.pr || steps.release.outputs.release_created
         run: |
           echo "🔍 release-please Results:"
-          echo "Release created: ${{ steps.release.outputs.release_created || 'false' }}"
-          echo "Tag name: ${{ steps.release.outputs.tag_name || 'none' }}"
-          echo "Version: ${{ steps.release.outputs.version || 'none' }}"
-          echo "PR number: ${{ steps.release.outputs.pr || 'none' }}"
-
-          PR_NUM="${{ steps.release.outputs.pr }}"
+          
           RELEASE_CREATED="${{ steps.release.outputs.release_created }}"
           TAG_NAME="${{ steps.release.outputs.tag_name }}"
-
+          VERSION="${{ steps.release.outputs.version }}"
+          PR_NUM="${{ steps.release.outputs.pr }}"
+          
+          echo "Release created: ${RELEASE_CREATED:-false}"
+          echo "Tag name: ${TAG_NAME:-none}"
+          echo "Version: ${VERSION:-none}"
+          echo "PR number: ${PR_NUM:-none}"
+          
           if [ -n "$PR_NUM" ]; then
             echo "📋 Release PR created: #$PR_NUM"
             echo "🔗 Review at: https://github.com/${{ github.repository }}/pull/$PR_NUM"
           fi
-
+          
           if [ "$RELEASE_CREATED" = "true" ]; then
             echo "🎉 Release $TAG_NAME was created!"
             echo "🔗 View at: https://github.com/${{ github.repository }}/releases/tag/$TAG_NAME"
