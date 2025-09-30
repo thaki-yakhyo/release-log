@@ -104,6 +104,7 @@ git commit -m "feat!: breaking change in API structure"  # Major version bump
 - **Triggers**: Push to main branch
 - **Creates**: Release PR with changelog and version updates
 - **Analyzes**: Conventional commits since last release
+- **Opens PR only for release-worthy commits** (feat → minor, fix → patch, feat!/BREAKING CHANGE → major)
 
 ### 2. GitHub Release (`release.yml`)
 - **Triggers**: Tag creation (when Release PR is merged)
@@ -111,7 +112,7 @@ git commit -m "feat!: breaking change in API structure"  # Major version bump
 - **Includes**: Commit hashes and author attribution
 
 ### 3. Docker Release (`docker-release.yml`)
-- **Triggers**: Tag creation
+- **Triggers**: **GitHub Release published** (UI or release-please) and manual dispatch
 - **Builds**: Multi-platform Docker images (amd64/arm64)
 - **Publishes**: To GitHub Container Registry (GHCR)
 - **Includes**: Security scanning and SBOM generation
@@ -162,7 +163,7 @@ ghcr.io/username/repo:latest    # Latest release
     - GitHub Release v2.2.0 created with enhanced changelog
     - Release notes include author attribution (by @username)
     - Categorized changes with emojis (🚀 Features, 🐛 Bug Fixes, etc.)
-    - Docker images built and published
+    - Docker images built and published (on release published)
     - Security scanning completed
     - Artifacts available for download
 ```

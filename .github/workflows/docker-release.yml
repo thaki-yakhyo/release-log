@@ -1,9 +1,8 @@
 name: Docker Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [published]
   workflow_dispatch:
 
 env:
@@ -24,52 +23,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Verify release from main branch
+      - name: Read release tag
+        id: releasetag
         run: |
-          echo "🔍 Verifying tag was created from main branch..."
-          git fetch origin main
-
-          # Check if the current commit (tag) is an ancestor of or in main branch
-          if git merge-base --is-ancestor ${{ github.sha }} origin/main; then
-            echo "✅ SUCCESS: Tag '${{ github.ref_name }}' was created from main branch"
-          else
-            echo "❌ ERROR: Tag '${{ github.ref_name }}' was NOT created from main branch"
-            echo "🚫 Docker releases are only allowed from main branch for security"
-            echo "💡 Please create the tag from main branch and try again"
-            exit 1
-          fi
+          TAG="${{ github.event.release.tag_name }}"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Detected release tag: $TAG"
 
       - name: Validate SemVer format
         run: |
-          TAG="${{ github.ref_name }}"
+          TAG="${{ steps.releasetag.outputs.tag }}"
           echo "🔍 Validating SemVer format for tag: $TAG"
 
-          # SemVer regex pattern: v{Major}.{Minor}.{Patch}[-{PreRelease}][+{BuildMetadata}]
           SEMVER_PATTERN="^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$"
-
           if echo "$TAG" | grep -qE "$SEMVER_PATTERN"; then
             echo "✅ SUCCESS: Tag '$TAG' follows SemVer format"
-
-            # Extract version components
-            VERSION=${TAG#v}
-            MAJOR=$(echo "$VERSION" | cut -d'.' -f1)
-            MINOR=$(echo "$VERSION" | cut -d'.' -f2)
-            PATCH=$(echo "$VERSION" | cut -d'.' -f3 | cut -d'-' -f1)
-
-            echo "📊 Docker image will be tagged with:"
-            echo "   $TAG (exact version)"
-            echo "   $MAJOR.$MINOR.$PATCH (semver)"
-            echo "   $MAJOR.$MINOR (minor version)"
-            echo "   $MAJOR (major version)"
-
-            if echo "$VERSION" | grep -q "-"; then
-              PRERELEASE=$(echo "$VERSION" | cut -d'-' -f2 | cut -d'+' -f1)
-              echo "   Pre-release: $PRERELEASE"
-            fi
           else
             echo "❌ ERROR: Tag '$TAG' does not follow SemVer format"
-            echo "🐳 Docker images require valid SemVer tags for proper versioning"
-            echo "💡 Please use format: v{Major}.{Minor}.{Patch}[-{PreRelease}]"
             exit 1
           fi
 
@@ -89,18 +59,18 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=tag
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ steps.releasetag.outputs.tag }}
+            type=semver,pattern={{version}},value=${{ steps.releasetag.outputs.tag }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.releasetag.outputs.tag }}
+            type=semver,pattern={{major}},value=${{ steps.releasetag.outputs.tag }}
+            type=raw,value=latest,enable=true
           labels: |
             org.opencontainers.image.title=${{ github.repository }}
             org.opencontainers.image.description=MLOps Release Log Application
             org.opencontainers.image.url=${{ github.event.repository.html_url }}
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
-            org.opencontainers.image.version=${{ github.ref_name }}
-            org.opencontainers.image.created=${{ github.event.head_commit.timestamp }}
+            org.opencontainers.image.version=${{ steps.releasetag.outputs.tag }}
+            org.opencontainers.image.created=${{ github.event.release.published_at }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.licenses=MIT
 
@@ -113,8 +83,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            VERSION=${{ github.ref_name }}
-            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+            VERSION=${{ steps.releasetag.outputs.tag }}
+            BUILD_DATE=${{ github.event.release.published_at }}
             VCS_REF=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -122,26 +92,22 @@ jobs:
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
-          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.releasetag.outputs.tag }}
           format: spdx-json
           output-file: sbom.spdx.json
 
       - name: Upload SBOM to release
         run: |
-          TAG="${{ github.ref_name }}"
-          if gh release view "$TAG" > /dev/null 2>&1; then
-            gh release upload "$TAG" sbom.spdx.json --clobber
-            echo "SBOM uploaded to release $TAG"
-          else
-            echo "Release $TAG not found, skipping SBOM upload"
-          fi
+          TAG="${{ steps.releasetag.outputs.tag }}"
+          gh release upload "$TAG" sbom.spdx.json --clobber
+          echo "SBOM uploaded to release $TAG"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.releasetag.outputs.tag }}
           format: 'sarif'
           output: 'trivy-results.sarif'
 
