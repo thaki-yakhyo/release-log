@@ -34,11 +34,19 @@ git checkout -b release-vX.Y.Z
 ## Automated Release Flow / 자동 릴리스 흐름
 After release-v* merges into main:
 - release-please creates a Release PR with version bump and changelog
+- It opens a Release PR only if there are release-worthy commits since the last tag:
+  - feat → minor bump
+  - fix → patch bump
+  - feat! or BREAKING CHANGE → major bump
 - You merge the Release PR → GitHub Release is created
 - Docker workflow builds and pushes images
 
 release-v*가 main에 병합되면:
 - release-please가 버전/체인지로그 포함 Release PR 생성
+- 마지막 태그 이후 "릴리스 가치가 있는" 커밋이 있을 때만 Release PR을 엽니다:
+  - feat → minor 증가
+  - fix → patch 증가
+  - feat! 또는 BREAKING CHANGE → major 증가
 - Release PR 병합 → GitHub Release 생성
 - Docker 워크플로우가 이미지 빌드/배포
 
