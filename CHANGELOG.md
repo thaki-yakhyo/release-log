@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.0](https://github.com/thaki-yakhyo/release-log/compare/v2.5.2...v2.6.0) (2025-09-30)
+
+
+### Features
+
+* check release please ([e5dfd77](https://github.com/thaki-yakhyo/release-log/commit/e5dfd7715a54bd06292739100fdaece20e70c61c))
+
 ## [2.5.0](https://github.com/thaki-yakhyo/release-log/compare/v2.4.0...v2.5.0) (2025-09-26)
 
 
