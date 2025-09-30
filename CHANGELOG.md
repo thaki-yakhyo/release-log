@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/thaki-yakhyo/release-log/compare/v2.6.1...v2.7.0) (2025-09-30)
+
+
+### Features
+
+* Packaging with pr ([64a7f2e](https://github.com/thaki-yakhyo/release-log/commit/64a7f2e47992a56ec319df5062cc45fd0b801782))
+
 ## [2.6.1](https://github.com/thaki-yakhyo/release-log/compare/v2.6.0...v2.6.1) (2025-09-30)
 
 
