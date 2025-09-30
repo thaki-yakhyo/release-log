@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.0](https://github.com/thaki-yakhyo/release-log/compare/v2.7.1...v2.8.0) (2025-09-30)
+
+
+### Features
+
+* nothing to check ([0d335e6](https://github.com/thaki-yakhyo/release-log/commit/0d335e6a246f50e4372843d5561f3254d2b0d998))
+
 ## [2.7.1](https://github.com/thaki-yakhyo/release-log/compare/v2.7.0...v2.7.1) (2025-09-30)
 
 
