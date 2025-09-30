@@ -179,9 +179,6 @@ ghcr.io/username/repo:latest    # Latest release
 - `version.txt` - Version tracking
 - `pyproject.toml` - Package metadata
 
-### Optional Files:
-- `.release-please-config.json` - Custom configuration (not required, uses defaults)
-
 ## 📊 Benefits
 
 - ✅ **Automated version management** based on conventional commits

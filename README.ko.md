@@ -179,9 +179,6 @@ ghcr.io/username/repo:latest    # 최신 릴리스
 - `version.txt` - 버전 추적
 - `pyproject.toml` - 패키지 메타데이터
 
-### 선택적 파일:
-- `.release-please-config.json` - 사용자 정의 설정 (필수 아님, 기본값 사용)
-
 ## 📊 장점
 
 - ✅ **자동화된 버전 관리** conventional commits 기반
