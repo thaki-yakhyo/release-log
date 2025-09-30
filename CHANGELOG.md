@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.9.1](https://github.com/thaki-yakhyo/release-log/compare/v2.9.0...v2.9.1) (2025-09-30)
+
+
+### Bug Fixes
+
+* Fix docker-release ([e38c000](https://github.com/thaki-yakhyo/release-log/commit/e38c00055a624e11de9657a17292971362c1a213))
+
 ## [2.9.0](https://github.com/thaki-yakhyo/release-log/compare/v2.8.0...v2.9.0) (2025-09-30)
 
 
