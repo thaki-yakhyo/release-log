@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.1](https://github.com/thaki-yakhyo/release-log/compare/v2.7.0...v2.7.1) (2025-09-30)
+
+
+### Bug Fixes
+
+* change docker release ([a9fa785](https://github.com/thaki-yakhyo/release-log/commit/a9fa785bce22202ce8425ddbbcf1f169c6a6d027))
+
 ## [2.7.0](https://github.com/thaki-yakhyo/release-log/compare/v2.6.1...v2.7.0) (2025-09-30)
 
 
