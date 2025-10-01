@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.1](https://github.com/thaki-yakhyo/release-log/compare/v3.5.0...v3.5.1) (2025-10-01)
+
+
+### Bug Fixes
+
+* add push tags trigger to Docker workflow for release-please compatibility ([d975653](https://github.com/thaki-yakhyo/release-log/commit/d97565368e393c0d2198862b00491016a26e5e76))
+
 ## [3.5.0](https://github.com/thaki-yakhyo/release-log/compare/v3.4.0...v3.5.0) (2025-10-01)
 
 
