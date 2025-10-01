@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.2.0](https://github.com/thaki-yakhyo/release-log/compare/v3.1.0...v3.2.0) (2025-10-01)
+
+
+### Features
+
+* Add comment in cli.py ([80f2e5f](https://github.com/thaki-yakhyo/release-log/commit/80f2e5f090a27eb61218279e3933b063ba37a85b))
+* Add docker cache for faster building ([bd8cc45](https://github.com/thaki-yakhyo/release-log/commit/bd8cc4546c31d7d7fc02eea040182b0eac303e65))
+
 ## [2.11.0](https://github.com/thaki-yakhyo/release-log/compare/v2.10.0...v2.11.0) (2025-10-01)
 
 
