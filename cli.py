@@ -1,4 +1,5 @@
 """Simple CLI."""
+# Test commit 1
 
 import sys
 
