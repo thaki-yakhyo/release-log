@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.11.0](https://github.com/thaki-yakhyo/release-log/compare/v2.10.0...v2.11.0) (2025-10-01)
+
+
+### Features
+
+* Update some more changes ([31e5ba9](https://github.com/thaki-yakhyo/release-log/commit/31e5ba9b26b6fd45b156e5ca7cb0c57f7aa3c111))
+
 ## [2.10.0](https://github.com/thaki-yakhyo/release-log/compare/v2.9.1...v2.10.0) (2025-09-30)
 
 
