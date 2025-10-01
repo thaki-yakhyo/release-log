@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.2](https://github.com/thaki-yakhyo/release-log/compare/v3.7.1...v3.7.2) (2025-10-01)
+
+
+### Bug Fixes
+
+* fix minor issue ([bdf21e7](https://github.com/thaki-yakhyo/release-log/commit/bdf21e765f3371e8fe23e0b67db731a4c065c92b))
+
 ## [3.7.1](https://github.com/thaki-yakhyo/release-log/compare/v3.7.0...v3.7.1) (2025-10-01)
 
 
