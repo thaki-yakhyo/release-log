@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/thaki-yakhyo/release-log/compare/v3.2.0...v3.3.0) (2025-10-01)
+
+
+### Features
+
+* Add test comment for commit ([95c6741](https://github.com/thaki-yakhyo/release-log/commit/95c6741515a8f98b400f26a3cc63fc4494fbdaa3))
+
 ## [3.2.0](https://github.com/thaki-yakhyo/release-log/compare/v3.1.0...v3.2.0) (2025-10-01)
 
 
