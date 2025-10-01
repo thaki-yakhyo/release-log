@@ -6,8 +6,10 @@ ARG VERSION=dev
 ARG BUILD_DATE
 ARG VCS_REF
 
-# Install build dependencies
-RUN apt-get update && apt-get install -y \
+# Install build dependencies (cached layer)
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y \
     build-essential \
     git \
     && rm -rf /var/lib/apt/lists/*
@@ -15,12 +17,13 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy dependency files
+# Copy dependency files (separate layer for better caching)
 COPY pyproject.toml ./
 
-# Install dependencies
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir .
+# Install Python dependencies with pip cache mount
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip && \
+    pip install .
 
 # Production stage
 FROM python:3.10-slim as production
