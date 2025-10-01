@@ -176,7 +176,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
+          # Single platform for faster builds (add arm64 only for releases)
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -184,13 +185,16 @@ jobs:
             VERSION=${{ needs.release-please.outputs.tag_name }}
             BUILD_DATE=${{ github.event.head_commit.timestamp || '' }}
             VCS_REF=${{ github.sha }}
-          # Advanced caching strategy for faster builds
+          # Optimized caching strategy
           cache-from: |
-            type=gha,scope=build-${{ github.ref_name }}
-            type=gha,scope=build-main
-          cache-to: type=gha,mode=max,scope=build-${{ github.ref_name }}
-          # Enable BuildKit inline cache
-          outputs: type=image,push=true,compression=zstd
+            type=gha,scope=docker-${{ github.repository }}
+            type=gha,scope=docker-main
+            type=registry,ref=ghcr.io/${{ github.repository }}:cache
+          cache-to: |
+            type=gha,mode=max,scope=docker-${{ github.repository }}
+            type=registry,ref=ghcr.io/${{ github.repository }}:cache,mode=max
+          # Faster compression and inline cache
+          outputs: type=image,push=true,compression=gzip,compression-level=1
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0

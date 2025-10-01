@@ -20,10 +20,11 @@ WORKDIR /app
 # Copy dependency files (separate layer for better caching)
 COPY pyproject.toml ./
 
-# Install Python dependencies with pip cache mount
+# Install Python dependencies with pip cache mount and pre-compiled wheels
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --upgrade pip && \
-    pip install .
+    pip install --upgrade pip setuptools wheel && \
+    pip install --no-deps . && \
+    pip install --only-binary=:all: .
 
 # Production stage
 FROM python:3.10-slim as production
