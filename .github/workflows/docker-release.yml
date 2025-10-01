@@ -1,9 +1,8 @@
 name: Docker Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
+    types: [published, created]
   workflow_dispatch:
     inputs:
       tag:
@@ -33,6 +32,8 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             TAG="${{ github.event.inputs.tag }}"
+          elif [ "${{ github.event_name }}" = "release" ]; then
+            TAG="${{ github.event.release.tag_name }}"
           else
             TAG="${{ github.ref_name }}"
           fi
@@ -47,7 +48,9 @@ jobs:
         run: |
           echo "🔍 Verifying tag commit is on main..."
           git fetch origin main
-          if git merge-base --is-ancestor ${{ github.sha }} origin/main; then
+          TAG="${{ steps.tag.outputs.tag }}"
+          TAG_SHA=$(git rev-list -n 1 "$TAG")
+          if git merge-base --is-ancestor "$TAG_SHA" origin/main; then
             echo "✅ Tag commit is on main"
           else
             echo "❌ Tag commit is not on main; aborting for security"
