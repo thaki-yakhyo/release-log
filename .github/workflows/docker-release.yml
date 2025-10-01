@@ -1,11 +1,12 @@
 name: Docker Release
 
 on:
-  release:
-    types: [published, created]
+  create:
   push:
     tags:
       - 'v*'
+  release:
+    types: [published, created]
   workflow_dispatch:
     inputs:
       tag:
@@ -37,6 +38,14 @@ jobs:
             TAG="${{ github.event.inputs.tag }}"
           elif [ "${{ github.event_name }}" = "release" ]; then
             TAG="${{ github.event.release.tag_name }}"
+          elif [ "${{ github.event_name }}" = "create" ]; then
+            # Only process tag creation, not branch creation
+            if [ "${{ github.event.ref_type }}" = "tag" ]; then
+              TAG="${{ github.event.ref }}"
+            else
+              echo "⏭️ Skipping branch creation event"
+              exit 0
+            fi
           else
             TAG="${{ github.ref_name }}"
           fi
