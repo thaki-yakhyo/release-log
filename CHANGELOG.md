@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.6.0](https://github.com/thaki-yakhyo/release-log/compare/v3.5.0...v3.6.0) (2025-10-01)
+
+
+### Features
+
+* test automatic Docker build trigger after workflow fix ([697200e](https://github.com/thaki-yakhyo/release-log/commit/697200e02a5f51ae7da2f0f8256c11483bfeb434))
+
+
+### Bug Fixes
+
+* add push tags trigger to Docker workflow for release-please compatibility ([d975653](https://github.com/thaki-yakhyo/release-log/commit/d97565368e393c0d2198862b00491016a26e5e76))
+
 ## [3.5.0](https://github.com/thaki-yakhyo/release-log/compare/v3.4.0...v3.5.0) (2025-10-01)
 
 
