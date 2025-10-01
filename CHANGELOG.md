@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.8.0](https://github.com/thaki-yakhyo/release-log/compare/v3.7.2...v3.8.0) (2025-10-01)
+
+
+### Features
+
+* Update cli.py ([f4227a6](https://github.com/thaki-yakhyo/release-log/commit/f4227a6e62a06b0d0134e9d689cc57e594e6e80b))
+
 ## [3.7.2](https://github.com/thaki-yakhyo/release-log/compare/v3.7.1...v3.7.2) (2025-10-01)
 
 
