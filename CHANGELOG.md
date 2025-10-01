@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.2](https://github.com/thaki-yakhyo/release-log/compare/v3.5.1...v3.5.2) (2025-10-01)
+
+
+### Bug Fixes
+
+* use create event to trigger Docker builds from release-please ([ab43b6a](https://github.com/thaki-yakhyo/release-log/commit/ab43b6a5d3b9f6d2301b50af85782af96cc9d2fc))
+
 ## [3.5.1](https://github.com/thaki-yakhyo/release-log/compare/v3.5.0...v3.5.1) (2025-10-01)
 
 
