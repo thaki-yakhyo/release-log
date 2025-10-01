@@ -4,7 +4,7 @@
 # Test commit 3
 # Test commit 4
 # Test commit 5
-
+# Test commit 6
 import sys
 
 from core import get_version, show_info
