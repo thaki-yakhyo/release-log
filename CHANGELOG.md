@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.0](https://github.com/thaki-yakhyo/release-log/compare/v3.3.0...v3.4.0) (2025-10-01)
+
+
+### Features
+
+* optimize Docker builds with advanced caching and release-based triggers ([488b16d](https://github.com/thaki-yakhyo/release-log/commit/488b16d5e5279d35442848da5e498b342b3e284d))
+
 ## [3.3.0](https://github.com/thaki-yakhyo/release-log/compare/v3.2.0...v3.3.0) (2025-10-01)
 
 
