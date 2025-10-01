@@ -176,8 +176,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          # Single platform for faster builds (add arm64 only for releases)
-          platforms: linux/amd64
+          # Multi-platform builds (required)
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
