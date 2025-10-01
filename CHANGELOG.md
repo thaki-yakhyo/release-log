@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.7.1](https://github.com/thaki-yakhyo/release-log/compare/v3.7.0...v3.7.1) (2025-10-01)
+
+
+### Performance Improvements
+
+* optimize Docker build caching while keeping multi-platform ([e277204](https://github.com/thaki-yakhyo/release-log/commit/e27720469a183d77f177ba46513d2a07c0de82ff))
+* optimize Docker build speed with advanced caching ([5c09352](https://github.com/thaki-yakhyo/release-log/commit/5c093527a5a94a227572ddf19a17621ccfe78a25))
+
 ## [3.7.0](https://github.com/thaki-yakhyo/release-log/compare/v3.6.0...v3.7.0) (2025-10-01)
 
 
