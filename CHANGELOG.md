@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.0](https://github.com/thaki-yakhyo/release-log/compare/v3.4.0...v3.5.0) (2025-10-01)
+
+
+### Features
+
+* add some commit text ([ec6fd1f](https://github.com/thaki-yakhyo/release-log/commit/ec6fd1f22cdce48738d2ef6beae7a6fb0f801ec6))
+
 ## [3.4.0](https://github.com/thaki-yakhyo/release-log/compare/v3.3.0...v3.4.0) (2025-10-01)
 
 
