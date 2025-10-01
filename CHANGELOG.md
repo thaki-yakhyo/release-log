@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.6.0](https://github.com/thaki-yakhyo/release-log/compare/v3.5.2...v3.6.0) (2025-10-01)
+
+
+### Features
+
+* embed Docker build directly in release-please workflow ([74544fe](https://github.com/thaki-yakhyo/release-log/commit/74544fe8651e1f12c45a1692f81e901719312d16))
+* test create event trigger for Docker workflow ([944f51f](https://github.com/thaki-yakhyo/release-log/commit/944f51fe48661edc8150472a5637300d6f304b88))
+
 ## [3.5.2](https://github.com/thaki-yakhyo/release-log/compare/v3.5.1...v3.5.2) (2025-10-01)
 
 
