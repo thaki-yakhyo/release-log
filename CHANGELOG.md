@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.0](https://github.com/thaki-yakhyo/release-log/compare/v3.6.0...v3.7.0) (2025-10-01)
+
+
+### Features
+
+* add some lines ([7901b23](https://github.com/thaki-yakhyo/release-log/commit/7901b23b33e8b090d9df6e5f7f49cd6aa88340a6))
+
 ## [3.6.0](https://github.com/thaki-yakhyo/release-log/compare/v3.5.2...v3.6.0) (2025-10-01)
 
 
