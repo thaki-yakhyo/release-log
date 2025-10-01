@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.8.2-dev](https://github.com/thaki-yakhyo/release-log/compare/v3.8.1-dev...v3.8.2-dev) (2025-10-01)
+
+
+### Bug Fixes
+
+* fix minor issue test ([edd66a7](https://github.com/thaki-yakhyo/release-log/commit/edd66a7340e303151613c59d0f32942a366adb80))
+
 ## [3.8.0](https://github.com/thaki-yakhyo/release-log/compare/v3.7.2...v3.8.0) (2025-10-01)
 
 
